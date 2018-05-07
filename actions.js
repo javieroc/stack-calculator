@@ -3,6 +3,7 @@ export const ENTER = 'ENTER';
 export const OPERATION = 'OPERATION';
 export const CLEAR = 'CLEAR';
 export const SWAP = 'SWAP';
+export const TOGLE_NEGATIVE = 'TOGGLE_NEGATIVE';
 
 // Action creator
 export const pressNum = number => ({
@@ -25,5 +26,10 @@ export const clear = () => ({
 
 export const swap = () => ({
   type: SWAP,
+});
+
+export const toggleNegative = idx => ({
+  type: TOGLE_NEGATIVE,
+  idx,
 });
 

@@ -1,9 +1,16 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Button from './Button';
-import { pressNum, enter, operation, clear, swap } from './actions';
+import {
+  pressNum,
+  enter,
+  operation,
+  clear,
+  swap,
+  toggleNegative,
+} from './actions';
 
 const baseNumber = {
   backgroundColor: '#485058',
@@ -52,13 +59,22 @@ const App = ({
   operationAction,
   clearAction,
   swapAction,
+  toggleNegativeAction,
 }) => (
   <View style={styles.container}>
     <View style={styles.top}>
-      <Text style={styles.append}>{stack[3] || 0}</Text>
-      <Text style={styles.append}>{stack[2] || 0}</Text>
-      <Text style={styles.append}>{stack[1] || 0}</Text>
-      <Text style={styles[inputState]}>{stack[0] || 0}</Text>
+      <TouchableOpacity onPress={() => toggleNegativeAction(3)}>
+        <Text style={styles.append}>{stack[3] || 0}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => toggleNegativeAction(2)}>
+        <Text style={styles.append}>{stack[2] || 0}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => toggleNegativeAction(1)}>
+        <Text style={styles.append}>{stack[1] || 0}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => toggleNegativeAction(0)} >
+        <Text style={styles[inputState]}>{stack[0] || 0}</Text>
+      </TouchableOpacity>
     </View>
     <View style={styles.bottom}>
       <View style={styles.row}>
@@ -105,6 +121,7 @@ const mapDispatchToProps = dispatch => bindActionCreators(
     operationAction: operation,
     clearAction: clear,
     swapAction: swap,
+    toggleNegativeAction: toggleNegative,
   },
   dispatch,
 );

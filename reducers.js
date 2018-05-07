@@ -1,4 +1,11 @@
-import { PRESS_NUM, ENTER, OPERATION, CLEAR, SWAP } from './actions';
+import {
+  PRESS_NUM,
+  ENTER,
+  OPERATION,
+  CLEAR,
+  SWAP,
+  TOGLE_NEGATIVE,
+} from './actions';
 
 // inputState = append | replace | push
 const initialState = {
@@ -25,8 +32,20 @@ const doOperation = (x, y, op) => {
   return 0;
 };
 
+const switchNegative = (x) => {
+  if (x.startsWith('-')) {
+    return x.slice(1);
+  }
+  return `-${x}`;
+};
+
 export default (state = initialState, action) => {
   switch (action.type) {
+    case TOGLE_NEGATIVE:
+      return {
+        stack: state.stack.map((x, i) => (action.idx === i ? switchNegative(x) : x)),
+        inputState: state.inputState,
+      };
     case SWAP:
       return {
         stack: [state.stack[1], state.stack[0], ...state.stack.slice(2)],
