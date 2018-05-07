@@ -3,7 +3,17 @@ import { StyleSheet, Text, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Button from './Button';
-import { pressNum } from './actions';
+import { pressNum, enter, operation, clear, swap } from './actions';
+
+const baseNumber = {
+  backgroundColor: '#485058',
+  textAlign: 'right',
+  padding: 8,
+  fontSize: 24,
+  fontWeight: 'bold',
+  borderBottomWidth: 1,
+  borderColor: '#70A649',
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -15,15 +25,17 @@ const styles = StyleSheet.create({
   bottom: {
     flex: 1,
   },
-  number: {
+  append: {
+    color: '#fff',
+    ...baseNumber,
+  },
+  replace: {
     color: '#70A649',
-    backgroundColor: '#485058',
-    textAlign: 'right',
-    padding: 8,
-    fontSize: 24,
-    fontWeight: 'bold',
-    borderBottomWidth: 1,
-    borderColor: '#70A649',
+    ...baseNumber,
+  },
+  push: {
+    color: '#2E71E5',
+    ...baseNumber,
   },
   row: {
     flex: 1,
@@ -33,55 +45,66 @@ const styles = StyleSheet.create({
   },
 });
 
-const App = ({ currentNumber, pressNumDispatch }) => (
+const App = ({
+  calculatorState: { stack, inputState },
+  pressNumDispatch,
+  enterAction,
+  operationAction,
+  clearAction,
+  swapAction,
+}) => (
   <View style={styles.container}>
     <View style={styles.top}>
-      <Text style={styles.number}>0</Text>
-      <Text style={styles.number}>0</Text>
-      <Text style={styles.number}>0</Text>
-      <Text style={styles.number}>{currentNumber}</Text>
+      <Text style={styles.append}>{stack[3] || 0}</Text>
+      <Text style={styles.append}>{stack[2] || 0}</Text>
+      <Text style={styles.append}>{stack[1] || 0}</Text>
+      <Text style={styles[inputState]}>{stack[0] || 0}</Text>
     </View>
     <View style={styles.bottom}>
       <View style={styles.row}>
-        <Button text="clear" />
-        <Button text="pow" />
-        <Button text="swap" />
-        <Button text="/" />
+        <Button text="clear" onPress={clearAction} />
+        <Button text="pow" onPress={operationAction} />
+        <Button text="swap" onPress={swapAction} />
+        <Button text="/" onPress={operationAction} />
       </View>
       <View style={styles.row}>
         <Button text="7" onPress={pressNumDispatch} />
         <Button text="8" onPress={pressNumDispatch} />
         <Button text="9" onPress={pressNumDispatch} />
-        <Button text="X" />
+        <Button text="X" onPress={operationAction} />
       </View>
       <View style={styles.row}>
-        <Button text="4" />
-        <Button text="5" />
-        <Button text="6" />
-        <Button text="-" />
+        <Button text="4" onPress={pressNumDispatch} />
+        <Button text="5" onPress={pressNumDispatch} />
+        <Button text="6" onPress={pressNumDispatch} />
+        <Button text="-" onPress={operationAction} />
       </View>
       <View style={styles.row}>
-        <Button text="1" />
-        <Button text="2" />
-        <Button text="3" />
-        <Button text="+" />
+        <Button text="1" onPress={pressNumDispatch} />
+        <Button text="2" onPress={pressNumDispatch} />
+        <Button text="3" onPress={pressNumDispatch} />
+        <Button text="+" onPress={operationAction} />
       </View>
       <View style={styles.row}>
-        <Button text="0" />
-        <Button text="." />
-        <Button text="enter" special />
+        <Button text="0" onPress={pressNumDispatch} />
+        <Button text="." onPress={pressNumDispatch} />
+        <Button text="enter" onPress={enterAction} special />
       </View>
     </View>
   </View>
 );
 
 const mapStateToProps = state => ({
-  currentNumber: state,
+  calculatorState: state,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(
   {
     pressNumDispatch: pressNum,
+    enterAction: enter,
+    operationAction: operation,
+    clearAction: clear,
+    swapAction: swap,
   },
   dispatch,
 );
